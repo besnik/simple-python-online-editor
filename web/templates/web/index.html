@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>Your page title here :)</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Roboto:400,300,600" rel="stylesheet" type="text/css">
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="{% static "web/css/normalize.css" %}">
+  <link rel="stylesheet" href="{% static "web/css/skeleton.css" %}">
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="{% static "web/images/favicon.png" %}">
+
+</head>
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+    <div class="row" style="margin-top: 5%">
+        <div class="columns">
+             <h4>Python Online Editor</h4>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 2%">
+      <div class="six columns" >
+        <h4>Source</h4>
+        <form action="{% url 'web:execute' %}" method="POST">
+            
+            <textarea style="height: 17em;" class="u-full-width" placeholder="print('hello world')" id="code" name="code">
+def fib(n):
+  a,b = 0,1
+  l = []
+  for i in range(0,n):
+    l.append(a)
+    a,b = b, a+b
+  return l
+
+print(fib(11))
+            </textarea>
+            <input id="btnExecute" class="button-primary" type="button" value="Try me!">
+        </form>
+      </div>
+      <div class="six columns">
+        <h4>Console</h4>
+        <div id="result">Result from docker container will go here (Formatted)</div>
+      </div>
+    </div>
+  </div>
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+<script>
+
+  function execution_done_callback() {
+    if (httpRequest.readyState === XMLHttpRequest.DONE) {
+      if (httpRequest.status === 200) {
+        data = JSON.parse(httpRequest.responseText)
+        document.getElementById("result").innerHTML = data.result;
+      } else {
+        alert('There was a problem with the request.');
+      }
+    }
+  }
+
+  function execute() {
+    httpRequest = new XMLHttpRequest();
+
+    if (!httpRequest) {
+      alert('Giving up :( Cannot create an XMLHTTP instance');
+      return false;
+    }
+
+    httpRequest.onreadystatechange = execution_done_callback;
+    httpRequest.open('POST', "/execute", true);
+    httpRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    content = (document.getElementById("code").value)
+
+    httpRequest.send(content);
+  }
+
+  window.onload = function() {
+    document.getElementById("btnExecute").onclick = execute;
+  }
+</script>
+
+</body>
+</html>
