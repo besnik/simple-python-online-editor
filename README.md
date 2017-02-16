@@ -2,6 +2,8 @@
 
 Python Online Editor implemented using Django and Docker
 
+![alt tag](https://raw.githubusercontent.com/besnik/online-editor/master/web/static/web/images/online-editor-screenshot.png)
+
 Goal of this project is to create online editor for any technology you can run in docker container.
 
 Current proof of concept is focusing on python online editor however concept is generic and works
@@ -59,8 +61,9 @@ is finished.
 # Data flow
 
 ```
-Browser -> (ajax post req) -> Django page -> (stores file in /tmp/code.py) -> 
-docker run -> (execute code) -> (store result in /tmp/code.out) -> (response to browser) -> Browser (update UI)
+browser -> (ajax post req) -> django page -> (stores file in /tmp/code.py) -> 
+docker run -> (execute code) -> (store result in /tmp/code.out) -> 
+(response to browser) -> browser callback (update UI)
 ```
 
 Currently the python execution is based on `Python Alpine Linux` docker images.
